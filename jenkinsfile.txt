@@ -1,5 +1,5 @@
 pipeline {
-	agent slave1
+	agent Jenkins-Slave1
 	parameters {
 		string(name: 'Tomcat-Dev', defaultValue: '34.217.28.15', description: 'tomcat dev server')
 		string(name: 'Tomcat-Prod', defaultValue: '34.217.28.15', description: 'tomcat Prod server')
@@ -25,12 +25,12 @@ pipeline {
         
 	stage('Deployment'){
 	parallel{    
-		Stage('Deploy to Staging') {
+		stage('Deploy to Staging') {
 			steps {
 			sh "sudo cp /opt/jenkins/workspace/PipelineAsCode-Udemy/webapp/target/*.war /usr/share/tomcat8/webapps/"
             	}
 		}
-      		stage ('Deploy to Production'){
+      		stage('Deploy to Production'){
             		steps{
                 		timeout(time:5, unit:'DAYS'){
                 		input message:'Approve PRODUCTION Deployment?'
