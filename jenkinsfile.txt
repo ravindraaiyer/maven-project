@@ -1,6 +1,16 @@
 pipeline {
-    agent any
-    stages{
+	agent slave1
+	parameters {
+		string(name: 'Tomcat-Dev', defaultValue: '34.217.28.15', description: 'tomcat dev server')
+		string(name: 'Tomcat-Prod', defaultValue: '34.217.28.15', description: 'tomcat Prod server')
+		string(name: 'Job-Name', defaultValue: 'PipelineAsCode-Udemy', description: 'This Jenkins Job name')
+	}
+
+	triggers {
+		pollSCM('* * * * *')
+	}
+
+	stages{
         stage('Build'){
             steps {
                 sh 'mvn clean package'
@@ -11,32 +21,32 @@ pipeline {
                     archiveArtifacts artifacts: '**/target/*.war'
                 }
             }
-        }
-        stage ('Deploy to Staging'){
-            steps {
-                build job: 'Deploy-to-staging'
-            }
-        }
-
-        stage ('Deploy to Production'){
-            steps{
-                timeout(time:5, unit:'DAYS'){
-                    input message:'Approve PRODUCTION Deployment?'
-                }
-
-                build job: 'Deploy-to-Prod'
-            }
-            post {
-                success {
-                    echo 'Code deployed to Production.'
-                }
-
-                failure {
-                    echo ' Deployment failed.'
-                }
-            }
+	}
+        
+	stage('Deployment'){
+	parallel{    
+		Stage('Deploy to Staging') {
+			steps {
+			sh "sudo cp /opt/jenkins/workspace/PipelineAsCode-Udemy/webapp/target/webapp.war /usr/share/tomcat8/webapps/
+            	}
+		}
+      		stage ('Deploy to Production'){
+            		steps{
+                		timeout(time:5, unit:'DAYS'){
+                		input message:'Approve PRODUCTION Deployment?'
+	                }
+	                echo 'Deployed To Production'
+	        	}
+            		post {
+                		success {
+                    			echo 'Code deployed to Production.'
+                		}
+			}
+             		failure {
+                 	   echo ' Production Deployment failed.'
+                	}
+            	}
         }
 
 
     }
-}
