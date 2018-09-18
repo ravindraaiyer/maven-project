@@ -1,5 +1,5 @@
 pipeline {
-	agent {'Jenkins-Slave1'}
+	agent { label 'Jenkins-Slave1' }
 	parameters {
 		string(name: 'Tomcat-Dev', defaultValue: '34.217.28.15', description: 'tomcat dev server')
 		string(name: 'Tomcat-Prod', defaultValue: '34.217.28.15', description: 'tomcat Prod server')
