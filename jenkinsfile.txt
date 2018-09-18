@@ -27,7 +27,7 @@ pipeline {
 	parallel{    
 		Stage('Deploy to Staging') {
 			steps {
-			sh "sudo cp /opt/jenkins/workspace/PipelineAsCode-Udemy/webapp/target/webapp.war /usr/share/tomcat8/webapps/
+			sh "sudo cp /opt/jenkins/workspace/PipelineAsCode-Udemy/webapp/target/webapp.war /usr/share/tomcat8/webapps
             	}
 		}
       		stage ('Deploy to Production'){
