@@ -13,12 +13,9 @@ pipeline {
 	stages{
         stage('Build'){
             steps {
-<<<<<<< HEAD
-                sh 'mvn clean package'
-		sh "docker build . -t tomcatwebapp:${env.BUILD_ID}"
-=======
-                sh 'sudo /var/lib/apache-maven/bin/mvn clean package'
->>>>>>> 2b4b7414694781590c99540eab8d095610a30802
+				sh 'mvn clean package'
+				sh "docker build . -t tomcatwebapp:${env.BUILD_ID}"
+				sh 'sudo /var/lib/apache-maven/bin/mvn clean package'
             }
             post {
                 success {
